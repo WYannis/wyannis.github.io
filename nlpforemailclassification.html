@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>NLP : hotels marketing emails classification</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+  });
+
+
+
+
+    </script>
+
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+
+            <!-- Header -->
+            <header id="header">
+                <a href="index.html" class="logo"><strong>Portfolio</strong> of Yannis W.</a>
+                <ul class="icons">
+                    <li><a href="https://github.com/WYannis" target="_blank" class="icon brands fa-github"><span
+                            class="label">Github</span></a></li>
+                    <li><a href="https://www.linkedin.com/in/yannis-w/" target="_blank" class="icon brands fa-linkedin"><span
+                            class="label">LinkedIn</span></a></li>
+                </ul>
+            </header>
+
+            <!-- Content -->
+            <section>
+                <header class="main">
+                    <h1>NLP: identify which writing style performs best for hotels' marketing
+                        emails</h1>
+                </header>
+
+                <p>As part of my masters' thesis, I was given the opportunity to work with <a
+                        href="https://for-sight.com" style="font-weight: bold">For-Sight</a>, a
+                    hospitality-focused
+                    CRM platform based in Edinburgh. They provide numerous hotels with digital and analytical tools that
+                    allow them to
+                    track
+                    the engagement and efficacy of their marketing campaigns. In particular, e-mails remain the
+                    privileged communication channel between hotels and their clients and hotels are looking
+                    to optimize their communication to drive strong customer engagement. For this purpose, I
+                    was tasked to work on a text analysis tool that will categorize e-mails, assess the marketing
+                    performance of each category and make it possible for hotels to adapt their strategy.</p>
+                <p>I developed a <b>dual classification method</b> that combines two common subgenre of text
+                    classification
+                    problems. The first model designed is a <b>formality classifier</b>, which computes a quantitative
+                    measure
+                    of how formal a text is - given the features of that text. This model was trained and tested on the
+                    <a href="https://github.com/raosudha89/GYAFC-corpus">Grammarly Yahoo Answers</a> corpus composed of
+                    110 000 sentences, and then applied onto the e-mails. The
+                    usage of an outside corpus as an intermediate to tune the formality classifier was mandatory, as it
+                    is a supervised learning method that logically requires pre-labelling of the text, and the manual
+                    labelling of e-mails would have been too laborious.</p>
+                <p>The second model is a <b>sentiment analysis classifier</b>, which aims at adding an extra layer on
+                    top of
+                    the formality class. It is capable of grasping the polarity of the
+                    words used <i>(positive/negative)</i> and the tone in writing. It was trained and tested on a
+                    Twitter
+                    database composed of 40
+                    000 tweets conveying different feelings. In
+                    total, four classes of sentiments have been used in this study: <i>[‘SERIOUS’, ‘HAPPY’, ‘FUN’,
+                        ‘CARING’]</i>.
+                    Although marketing e-mails are mostly stripped of any strong sentiments, there are perceivable
+                    differences in the way hotels with different strategies
+                    interact with their clients.</p>
+                <span class="image main"><img src="images/dual_classification_model.png" alt=""/></span>
+
+                <p>Applied together, those models constitute a classification that is detailed enough to
+                    bring interesting insights to the marketing teams in the hospitality business. The results of the
+                    application on the dual model on an e-mails database of partners hotels from For-Sight indicate that
+                    it is capable of accurately grasping the preferences of each hotel’s clientele. It effectively
+                    allows hotel to adapt their
+                    communication style depending on the customer engagement metrics showcased by each writing
+                    style. </p>
+
+                <hr class="major"/>
+                <h2>Try it out !</h2>
+                <p>Have a look at the output of the dual classification model for a few of the hotels that I worked
+                    on. <i>Please note that the data points have been limited on purpose.</i></p>
+                <!-- Selector for filtering data -->
+                <label for="category-selector" style="font-size: 16px">Filter by hotel:</label>
+                <select style="margin-bottom: 30px" id="category-selector">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <p id="hotel-selected-description"></p>
+                <!-- Container for the scatter plot -->
+                <div id="scatter-plot" style="margin: auto; width:900px; height:600px"></div>
+
+                <hr class="major"/>
+                <h2>Formality classifier</h2>
+                <p>The formality classifier is a Multinomial Naïve Bayes model. It takes the numerical representation of
+                    a sentence as input and returns the probability that the sentence belongs into the "Formal" or
+                    "Informal" class.</p>
+                <p>To represent a sentence numerically the best set of features was found to be a set of 6 linguistic
+                    statistics, which are described below.</p>
+                 <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="3">Linguistic Statistics</td>
+                            <td><b>Case:</b>
+                                <ul>
+                                    <li>the number of entirely capitalized words</li>
+                                    <li>binary indicator for whether sentence is
+                                        lowercase
+                                    </li>
+                                    <li>binary indicator for whether the first word is capitalized</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Lexical:</b>
+                                <ul>
+                                    <li>number of contractions in the sentence</li>
+                                    <li>average word length</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Punctuation:</b> number of "? ; … ! " in the sentence</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Finally, to compute a formality score at e-mail level, we need to consider an e-mail as an ensemble
+                    of
+                    sentences. The formality score that will be computed for each e-mail is the weighted average of the
+                    probabilities of its sentences being formal. In mathematical terms, for an e-mail of length 𝐿
+                    characters, made of 𝑛 sentences, the formality score 𝐹 is:</p>
+                <p>\[ F=\sum_{i=1}^{n}P(sentence_i=formal)\times \frac{len(sentence_i)}{L} \]</p>
+
+                <hr class="major"/>
+
+                <h2>Sentiment classifier</h2>
+                <p> For the sentiment classifier model, I combined <b>Convolutional Neural Network (CNN)</b> and <b>Long-Short
+                    Term
+                    Memory (LSTM) networks</b> that are common models found in the literature. Feeding as input into
+                    those models, the words from the emails were turned into a numerical array thanks to the
+                    <a href="https://nlp.stanford.edu/projects/glove/"> GloVe word embeddings</a>. More specifically, I
+                    used the 200-dimensions GloVe vectors that were trained
+                    on a corpus of 27 billion tweets (most suited to our case of use since we are also working on
+                    tweets). It is one of the best performing embeddings and was introduced in 2014 by <i>Pennington et
+                        al.</i>
+                    from Stanford University.</p>
+                <p>The intuition behind using CNNs on text relies on the fact that text is structured and organized; As
+                    such, we can expect a CNN model to discover and learn patterns that would otherwise be lost in a
+                    classic
+                    feedforward network that do not include the filtering step. For example, it might be able to
+                    distinguish that
+                    using <i>"down"</i> in the context of <i>"down to earth"</i> is actually of positive sentiment as
+                    opposed
+                    to other
+                    phrases such as <i>"feeling down"</i>. Furthermore, it will be able to extract these features
+                    regardless of where they
+                    occur in the sentence.</p>
+                <p>Long-Short Term Memory networks are a type of Recurrent Neural Network architecture that is
+                    designed to remember previously read values for any given period of time. LSTMs usually contain
+                    three gates that control the flow to and from their memories. The <i>“input gate"</i> controls the
+                    input of new information to the memory. The <i>“forget gate"</i> controls how long certain values
+                    are held in memory. Finally, the <i>“output gate"</i> controls how much the value stored in memory
+                    affects the output activation of the block. Intuitively, the benefit of using LSTMs when doing any
+                    type of text analysis is that the network will remember what it has read previously, and thus is
+                    can have a better understanding of the input.</p>
+                <p>The final architecture of the model deployed to classify sentiments is :
+                <ul>
+                    <li>Initialize 1 LSTM layer with the embeddings obtained from GloVe vectors: this layer is supposed
+                        to remain with frozen weights to conserve the information of the pre-trained GloVe vectors.
+                    </li>
+                    <li>Add a second LSTM layer with empty embeddings which weights will get adjusted by the information
+                        extracted from the training phase.
+                    </li>
+                    <li>Add 5 CNN layers, each of them having 20 filters. We use the L2 norm as regularization metric
+                        and the ReLu function as activation function.
+                    </li>
+                    <li>The final layers are a MaxPooling layer and a final fully-connected
+                        layer that creates a 4-dimension output with a softmax activation function, each of those
+                        dimensions indicating the probability of belonging to one of the four sentiments SERIOUS, HAPPY,
+                        FUN and CARING.
+                    </li>
+                </ul>
+                </p>
+
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+
+            <!-- Search -->
+            <section id="search" class="alt">
+                <form method="post" action="#">
+                    <input type="text" name="query" id="query" placeholder="Search"/>
+                </form>
+            </section>
+
+            <!-- Menu -->
+            <nav id="menu">
+                <header class="major">
+                    <h2>Menu</h2>
+                </header>
+                <ul>
+                    <li><a href="index.html">Homepage</a></li>
+                    <li>
+                        <span class="opener">Projects</span>
+                        <ul>
+                            <li><a href="nlpforemailclassification.html">NLP: identify which writing style performs best
+                                for hotels' marketing
+                                emails</a></li>
+                            <!--                            <li><a href="#">Multi-touch marketing attribution models</a></li>-->
+                            <!--                            <li><a href="#">Visualization of company website frequent browsing patterns</a></li>-->
+                        </ul>
+                    </li>
+                    <li><a href="mailto:wyannis.pro@gmail.com">Contact me</a></li>
+
+                </ul>
+            </nav>
+
+            <!-- Section -->
+            <section>
+                <header class="major">
+                    <h2>Get in touch</h2>
+                </header>
+                <p>Feel free to reach out with any interesting data job prospects in <b>Dublin</b> :</p>
+                <ul class="contact">
+                    <li class="icon solid fa-envelope"><a href="mailto:wyannis.pro@gmail.com">wyannis.pro@gmail.com</a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Footer -->
+            <footer id="footer">
+                <p class="copyright">&copy; Portfolio Yannis W. All rights reserved.
+                    Open source design from: <a href="https://html5up.net">HTML5 UP</a>.</p>
+            </footer>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/plotly_chart.js"></script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
